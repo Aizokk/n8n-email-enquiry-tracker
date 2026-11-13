@@ -1,0 +1,246 @@
+{
+  "name": "Automated Email Enquiry Tracking System",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ed1135f9-905d-4a5f-b8c7-543f48b101ff",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZQ3mrWXPTzE1Ao4J",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "43410b3a-e8a6-468f-9231-015c97e0519f",
+              "name": "Sender",
+              "value": "={{ $json.From }}",
+              "type": "string"
+            },
+            {
+              "id": "01ce2743-f1b9-4947-8cca-25d0b7f7a8fd",
+              "name": "Subject",
+              "value": "={{ $json.Subject }}",
+              "type": "string"
+            },
+            {
+              "id": "8d52ea7d-96c8-4f4b-a8ed-557b7ad6d035",
+              "name": "Message",
+              "value": "={{ $json.snippet }}",
+              "type": "string"
+            },
+            {
+              "id": "c2741ae5-7479-4ff0-9ea2-d61ce1820129",
+              "name": "Date",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "70c222db-d423-436b-9c8a-d6a04c364940",
+              "name": "Message ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "2f907eb1-96a7-488d-a204-f730058c609a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1i9a_OruWWfnwSWzZ2mnl7RRUh_r4jqCV65Cppp8xUFs",
+          "mode": "list",
+          "cachedResultName": "Automated Email Enquiry Tracking System",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1i9a_OruWWfnwSWzZ2mnl7RRUh_r4jqCV65Cppp8xUFs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1i9a_OruWWfnwSWzZ2mnl7RRUh_r4jqCV65Cppp8xUFs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sender": "={{ $json.Sender }}",
+            "Subject": "={{ $json.Subject }}",
+            "Message": "={{ $json.Message }}",
+            "Date": "={{ $json.Date }}",
+            "Message Id": "={{ $json['Message ID'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Sender",
+              "displayName": "Sender",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message Id",
+              "displayName": "Message Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        0
+      ],
+      "id": "c67ff241-0237-4f53-9266-43e477037872",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HsQXYKRxdJHM1R7m",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Sender }}",
+        "subject": "We Have Received Your Enquiry",
+        "message": "<p>Hello,</p> <p>Thank you for contacting us. We have received your enquiry and logged it with our team.</p> <p>One of our representatives will review your message and get back to you shortly.</p> <p>Best regards,<br>Support Team</p>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "bfb17136-417b-4560-9534-f319287f0a39",
+      "name": "Send a message",
+      "webhookId": "4d98d62d-4de1-4067-899e-7041c12106ef",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZQ3mrWXPTzE1Ao4J",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d55951ef-55f0-4e6c-b1d6-2167f3129a85",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "92559aec243b989dd8aba9c0d8cdf9cdce14832ba1c7c83e9ae6118d7d144c9e"
+  },
+  "nodeGroups": [],
+  "id": "Uot18UzzG0YKMe6h",
+  "tags": []
+}
